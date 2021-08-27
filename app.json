@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "tgl-react",
+    "slug": "tgl-react",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "tgl-react"
+}
