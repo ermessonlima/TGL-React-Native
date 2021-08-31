@@ -26,10 +26,11 @@ export default function Header({ view, setModalOpen }: any) {
                         TGL
                     </Title>
                 </Button>
+                
                 <Line />
             </TglLogo>
             <IconsSection>
-                
+
                 {
                     view && <Button fontSize={'30px'}
                         style={{ marginRight: 20 }}
