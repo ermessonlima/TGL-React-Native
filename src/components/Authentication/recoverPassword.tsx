@@ -1,90 +1,80 @@
-import {useState} from "react";
 import {
     Container,
-    Form,
-    Input,
-    SubmitButton,
-    HandleButton,
+    FormRecover,
+    Title
 } from "./styles";
-import { get } from 'lodash';
-import { isEmail } from 'validator';
-import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import axios from '../../services/axios';
-import { useSelector } from "react-redux";
-import { FiArrowLeft } from "react-icons/fi";
-import history from '../../services/history';
 
-interface userState {
-    usuario: {
-        user: {
-            username: string;
-            email: string;
-            password: string;
-        }
+import React from 'react'
+import { View } from 'react-native'
+import Input from "../Input";
+import Button from "../Button";
+import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from "@react-navigation/native";
+
+
+const Recover = () => {
+
+    const navigation = useNavigation();
+
+    const handleSingUp = () => {
+        navigation.navigate('SignIn')
     }
-}
-
-const Authentication = () => {
-
-    const [email, setEmail] = useState('');
-
-   async  function handleSubmit(e) {
-        e.preventDefault();
-        let formErros = false;
-
-        if (!isEmail(email)) {
-            formErros = true;
-            toast.error('Invalid e-mail')
-        }
-
-        if (formErros) {
-            return;
-        }
-      
-
-        try {
-            await axios.post('/passwords', {
-                 email,
-                 redirect_url: "http://localhost:3000/reset"
-             });
-
-             toast.success('Email successfully sent!')
-             toast.success('Check your inbox!')
-             history.push('/')
- 
-         } catch (e) {
-             const errors = get(e, 'response.data',[]);
-            console.log(e)
-            
-         }
-
-
-       
-    }
-
-
 
     return (
-        <Container>
-            <h1>Reset password</h1>
-            <Form onSubmit={handleSubmit}>
-            <Input
+        <Container >
+
+            <Title>Reset password</Title>
+
+            <FormRecover >
+
+                <Input
+                    name="email"
                     placeholder="Email"
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
                 />
-                <SubmitButton type="submit">
+
+                <Button
+                    fontSize={'30px'}
+                    color="#B5C401"
+                    onPress={() => { console.log('deu') }}>
                     Send link
-                </SubmitButton>
-            </Form>
-            <HandleButton >
-                <Link to="/"> <FiArrowLeft /> Back </ Link>
-            </HandleButton>
+                    <AntDesign
+                        name="arrowright"
+                        size={30}
+                        color="#B5C401" />
+                </ Button>
+
+
+            </FormRecover>
+            <Button
+                fontSize={'30px'}
+                style={{ marginTop: 50 }}
+                color="#707070" onPress={handleSingUp}>
+                <AntDesign
+                    name="arrowleft"
+                    size={30}
+                    color="#707070" />
+                Back
+
+            </ Button>
+            <Button
+                fontSize={'30px'}
+                style={{ marginTop: 50 }}
+                color="#707070" onPress={handleSingUp}>
+                Sign Up
+                <AntDesign
+                    name="arrowright"
+                    size={30}
+                    color="#707070" />
+            </ Button>
+    
+
+            <View style={{ bottom: 0, backgroundColor: '#fff000', right: 0, position: 'absolute' }}>
+
+
+            </View>
+
         </Container>
     );
 };
 
-export default Authentication;
+export default Recover;

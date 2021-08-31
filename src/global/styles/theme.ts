@@ -6,6 +6,7 @@ export default  {
 
         text_primary:'#707070' ,
         text_secondary:'#B5C401' ,
-        background: '#F7F7F7'
+        background: '#F7F7F7',
+        border:'#DDDDDD',
     }
 }

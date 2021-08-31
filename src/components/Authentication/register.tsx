@@ -1,110 +1,84 @@
-import { useState } from 'react';
 import {
     Container,
     Form,
-    Input,
+    RecoverButton,
     SubmitButton,
     HandleButton,
+    ContentRight,
+    Title
 } from "./styles";
-import { Link } from 'react-router-dom';
-import { FiArrowRight } from "react-icons/fi";
-import { isEmail } from 'validator';
-import { toast } from 'react-toastify';
-import history from '../../services/history';
-import { useDispatch } from 'react-redux';
-import axios from '../../services/axios';
-import { get } from 'lodash';
 
-const Authentication = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const dispatch = useDispatch();
+import React from 'react'
+import { Text, View } from 'react-native'
+import Input from "../Input";
+import Button from "../Button";
+import { AntDesign } from '@expo/vector-icons';
+import { TouchableOpacityProps } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        let formErros = false;
 
-        //Verifica se o nome do usuario é menor que 3 caracteres e menor que 255
-        if (username.length < 3 || username.length > 255) {
-            formErros = true;
-            toast.error('Name must be between 3 to 255 characters.')
-        }
+const Register = () => {
 
-        //Verifica se o email é valido
-        if (!isEmail(email)) {
-            formErros = true;
-            toast.error('Invalid email.')
-        }
+    const navigation = useNavigation();
 
-        //Verifica se a senha é menor que 6 caracteres e menor que 50
-        if (password.length < 6 || password.length > 50) {
-            formErros = true;
-            toast.error('Password must be between 6 to 50 characters.')
-        }
-
-        if (formErros) {
-            return;
-        }
-
-        try {
-           await axios.post('/users', {
-                username,
-                email,
-                password,
-                password_confirmation: password
-
-            });
-            toast.success('You have registered!')
-            history.push('/')
-
-        } catch (e) {
-            const errors = get(e, 'response.data',[]);
-          
-        toast.error('This user is already registered') 
-           
-        }
-
+    const handleSingUp = () => {
+        navigation.navigate('SignIn')
     }
 
-
     return (
-        <Container>
-            <h1>Registration</h1>
-            <Form onSubmit={handleSubmit}>
-                <Input
-                    placeholder="Username"
-                    id="username"
-                    type="username"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                />
+        <Container >
+
+            <Title>Registration</Title>
+
+            <Form >
 
                 <Input
+                    name="name"
+                    placeholder="Name"
+                />
+                <Input
+                    name="email"
                     placeholder="Email"
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
                 />
 
                 <Input
-                    placeholder="Password"
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    name="passaword"
+                    icon="passaword"
+                    placeholder="Passaword"
                 />
 
-                <SubmitButton type="submit">
-                    Register <FiArrowRight />
-                </SubmitButton>
+                <Button
+                    fontSize={'30px'}
+                    color="#B5C401"
+                    onPress={() => { console.log('deu') }}>
+                    Register
+                    <AntDesign
+                        name="arrowright"
+                        size={30}
+                        color="#B5C401" />
+                </ Button>
+
+
             </Form>
-            <HandleButton >
-                <Link to="/"> Back </ Link>
-            </HandleButton>
+            <Button
+                fontSize={'30px'}
+                style={{ marginTop: 50 }}
+                color="#707070" onPress={handleSingUp}>
+                <AntDesign
+                    name="arrowleft"
+                    size={30}
+                    color="#707070" />
+                Back
+
+            </ Button>
+
+            <View style={{ bottom: 0, backgroundColor: '#fff000', right: 0, position: 'absolute' }}>
+
+
+            </View>
+
         </Container>
     );
 };
 
-export default Authentication;
+export default Register;

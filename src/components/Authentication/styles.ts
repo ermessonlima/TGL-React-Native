@@ -15,17 +15,31 @@ export const Title = styled.Text`
 `;
 
 export const Form = styled.View`
+
+    elevation: 1;
     height: 293px;
     width:306px ;
     margin-top: 26px;
     background-color: #FFF;
     border-radius: 10px;
+    
 `;
 
-export const Input = styled.TextInput`
+export const FormRecover = styled.View`
+    height: 143px;
+    width:306px ;
+    elevation: 1;
+    margin-top: 26px;
+    background-color: #FFF;
+    border-radius: 10px;
 `;
 
-export const RecoverButton = styled.View`
+export const RecoverButton = styled.Button`
+`;
+export const ContentRight = styled.View`
+
+    margin: 25px ;
+    align-items: flex-end;
 `;
 
 export const SubmitButton = styled.Button`
