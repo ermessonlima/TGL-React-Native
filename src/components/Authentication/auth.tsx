@@ -1,32 +1,68 @@
 import {
     Container,
-    Form,
+    Forms,
     RecoverButton,
     SubmitButton,
     HandleButton,
     ContentRight,
     Title
 } from "./styles";
-
-import React from 'react'
-import { Text, View } from 'react-native'
+import React, { useState, useCallback } from 'react'
+import { Text, View, ToastAndroid } from 'react-native'
 import Input from "../Input";
 import Button from "../Button";
 import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacityProps } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import InputForm from "../InputForm";
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
+
+
+interface FormData {
+    email: string;
+    password:string;
+    
+}
+const schema = Yup.object().shape({
+    email: Yup
+    .string()
+    .required('Email Obrigatorio')
+    .email('Email invalido'),
+    password: Yup
+    .string()
+    .required('Senha Obrigatorio')
+    .min(6, 'Senha menor q 6'),
+    
+});
 
 
 const Authentication = () => {
+
+    const {
+        control,
+        handleSubmit,
+        formState: {errors}
+    } = useForm({
+        resolver:yupResolver(schema)
+    });
 
     const navigation = useNavigation();
 
     const handleSingUp = () => {
         navigation.navigate('SignUp')
     }
-    const handleLogin = () => {
-        navigation.navigate('HomeTab')
+
+    const handleSignIn = async (form: FormData) => {
+        console.log('a')
+        const data = {
+            email: form.email,
+            password: form.password
+        }
+
+        console.log(data)
     }
+
     const handleRecover = () => {
         navigation.navigate('Recover')
     }
@@ -34,44 +70,49 @@ const Authentication = () => {
     return (
         <Container >
             <Title>Authentication</Title>
-            <Form >
 
-                <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
+
+
+            <Forms >
+                <InputForm
                     name="email"
+                    control={control}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="email-address"
                     placeholder="Email"
+                    error={errors.email && errors.email.message}
                 />
-                <Input
-                    name="passaword"
+                <InputForm
+                    name="password"
+                    control={control}
                     icon="passaword"
-                    placeholder="Passaword"
                     secureTextEntry
+                    placeholder="Passaword"
+                    error={errors.password && errors.password.message}
                 />
-                
-                <ContentRight>
 
+                <ContentRight>
                     <Button
-                    onPress={handleRecover}
+                        onPress={handleRecover}
                         color="#707070"
-                        fontSize={'15px'}
-                    >
+                        fontSize={'15px'} >
                         <Text >  I forgot my password  </ Text>
                     </Button>
                 </ContentRight>
-
                 <Button
                     fontSize={'30px'}
                     color="#B5C401"
-                    onPress={handleLogin}>
+                    onPress={handleSubmit(handleSignIn)}>
                     Log In
                     <AntDesign
                         name="arrowright"
                         size={30}
                         color="#B5C401" />
                 </ Button>
-            </Form>
+            </Forms>
+
+
             <Button
                 fontSize={'30px'}
                 style={{ marginTop: 50 }}

@@ -14,7 +14,7 @@ export const Title = styled.Text`
     color: ${({ theme }) => theme.colors.text_primary};
 `;
 
-export const Form = styled.View`
+export const Forms = styled.View`
 
     elevation: 1;
     height: 293px;

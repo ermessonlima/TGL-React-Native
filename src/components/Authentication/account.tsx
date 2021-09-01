@@ -1,6 +1,6 @@
 import {
     Container,
-    Form,
+    Forms,
     RecoverButton,
     SubmitButton,
     HandleButton,
@@ -32,7 +32,7 @@ const AccountScreen = () => {
                 Hi,Ermesson!
             </Title>
 
-            <Form >
+            <Forms >
 
                 <Input
                     name="name"
@@ -58,7 +58,7 @@ const AccountScreen = () => {
                 </ Button>
 
 
-            </Form>
+            </Forms>
           
 
        
