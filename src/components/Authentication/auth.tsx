@@ -17,6 +17,8 @@ import InputForm from "../InputForm";
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useSelector, useDispatch } from 'react-redux';
+import api from '../../services/api'
 
 
 interface FormData {
@@ -38,7 +40,7 @@ const schema = Yup.object().shape({
 
 
 const Authentication = () => {
-
+    const dispatch = useDispatch();
     const {
         control,
         handleSubmit,
@@ -54,17 +56,37 @@ const Authentication = () => {
     }
 
     const handleSignIn = async (form: FormData) => {
-        console.log('a')
-        const data = {
+        console.log('redfdre')
+  
+        await api.post('/sessions', {
             email: form.email,
             password: form.password
-        }
+        }).then( res => {
+            console.log(res.data.user.username)
+            console.log(res.data)
+            dispatch({
+                type: 'ADD_NOTE',
+                payload: {
+                data: {  
+                  name: res.data.user.username,
+                  email: form.email,
+                  password: form.password,
+                  token: res.data.token.token}
+                }
+              })
+              navigation.navigate('HomeTab')
 
-        console.log(data)
+        })
+        console.log('redfdre')
+
+    
     }
 
     const handleRecover = () => {
-        navigation.navigate('Recover')
+        dispatch({
+            type: 'ADD_NOTE',
+          })
+       console.log('dd')
     }
 
     return (
@@ -81,6 +103,7 @@ const Authentication = () => {
                     autoCorrect={false}
                     keyboardType="email-address"
                     placeholder="Email"
+            
                     error={errors.email && errors.email.message}
                 />
                 <InputForm
@@ -89,6 +112,7 @@ const Authentication = () => {
                     icon="passaword"
                     secureTextEntry
                     placeholder="Passaword"
+                
                     error={errors.password && errors.password.message}
                 />
 

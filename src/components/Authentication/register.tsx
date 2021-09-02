@@ -8,7 +8,7 @@ import {
     Title
 } from "./styles";
 
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Text, View } from 'react-native'
 import Input from "../Input";
 import Button from "../Button";
@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import { useSelector, useDispatch } from 'react-redux';
 
 interface FormData {
     name: string;
@@ -49,7 +50,12 @@ const schema = Yup.object().shape({
 
 const Register = () => {
 
+
     
+    const data = useSelector((state: any) => state.notes.data)
+    useEffect(() => {
+       console.log(data)
+    }, [])
     const {
         control,
         handleSubmit,
