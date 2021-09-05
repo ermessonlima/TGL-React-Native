@@ -1,27 +1,40 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { View, StyleSheet } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function index() {
     return (
-        <View style={style.container}>
-            <View style={style.cicle}>
-                <View style={style.miniCicle}>
-                    <MaterialIcons name="attach-money" size={24} color="white" />
+        <View
+            style={style.container}>
+            <View
+                style={style.cicle}>
+                <View
+                    style={style.miniCicle}>
+                    <MaterialIcons
+                        name="attach-money"
+                        size={24}
+                        color="white" />
                     <Feather
-                        style={{borderRadius:12 , position: 'absolute', bottom:-10, right:-10, backgroundColor: '#B5C300', }}
-                        name="plus-circle" size={24} color="white" />
+                        style={{
+                            borderRadius: 12,
+                            position: 'absolute',
+                            bottom: -10, right: -10,
+                            backgroundColor: '#B5C300'
+                        }}
+                        name="plus-circle"
+                        size={24}
+                        color="white"
+                    />
                 </View>
             </View>
-
         </View>
     )
 }
 
 const style = StyleSheet.create({
     container: {
-        zIndex:50,
+        zIndex: 50,
         width: 86,
         height: 86,
         backgroundColor: '#B5C300',
@@ -35,7 +48,7 @@ const style = StyleSheet.create({
         color: '#FFF'
     },
     cicle: {
-         zIndex:50,
+        zIndex: 50,
         width: 48,
         height: 48,
         backgroundColor: '#B5C300',
@@ -48,7 +61,7 @@ const style = StyleSheet.create({
         color: '#FFF'
     },
     miniCicle: {
-        zIndex:50,
+        zIndex: 50,
         width: 36,
         height: 36,
         backgroundColor: '#B5C300',

@@ -1,64 +1,36 @@
-import {
-    Container,
-    Forms,
-    RecoverButton,
-    SubmitButton,
-    HandleButton,
-    ContentRight,
-    Title
-} from "./styles";
-
 import React from 'react'
-import { Text, View } from 'react-native'
-import Input from "../Input";
+import * as Yup from 'yup';
 import Button from "../Button";
-import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacityProps } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import api from '../../services/api'
 import InputForm from "../InputForm";
 import { useForm } from 'react-hook-form';
-import * as Yup from 'yup';
+import { Container, Forms, Title} from "./styles";
 import { yupResolver } from '@hookform/resolvers/yup'
-import api from '../../services/api'
 import { useSelector, useDispatch } from 'react-redux';
-
-
 
 interface FormData {
     name: string;
     email: string;
     password: string;
-
 }
+
 const schema = Yup.object().shape({
     name: Yup
         .string()
-        .min(6, 'Nome menor q 6'),
+        .min(6, 'Minimum 6 characters'),
     password: Yup
         .string()
-        .min(6, 'Senha menor q 6'),
+        .min(6, 'Minimum 6 characters'),
 
 });
-
-
-
-
-
-
-
 const AccountScreen = () => {
     const dispatch = useDispatch();
-    
     const data = useSelector((state: any) => state.notes.data)
-
     const config = {
         headers: { Authorization: `Bearer ${data.token}` }
     };
-
-
-    const navigation = useNavigation();
-
-    const {
+    const {   
+        reset,
         control,
         handleSubmit,
         formState: {errors}
@@ -68,36 +40,34 @@ const AccountScreen = () => {
 
     const handleSingUp = async (form: FormData) => {
         console.log('a')
-        const data = {
+        const dataForm = {
             username: form.name,
             password: form.password,
         }
-        console.log(data)
-
-        console.log(data)
-        await api.put('/users', data, config)
-
-        dispatch({
-            type: 'ADD_NOTE',
-            payload: {
-            data: {  
-              name: form.name,
-
-            }
-            }
-          })
-        
+        try {
+            console.log(dataForm)
+            console.log(config)
+            await api.put('/users', dataForm, config)
+            dispatch({
+                type: 'ADD_NOTE',
+                payload: {
+                data: { 
+                    ...data, 
+                  name: form.name,
+                }}
+              })
+              reset()
+        }catch(e) {
+            console.log(e)
+        }
     }
 
     return (
         <Container >
-
             <Title>
                 Hi, {data.name}!
             </Title>
-
             <Forms >
-
                 <InputForm
                     name="name"
                     control={control}
@@ -107,7 +77,6 @@ const AccountScreen = () => {
                     placeholder="Name"
                     error={errors.name && errors.name.message}
                 />
-
                 <InputForm
                     name="password"
                     control={control}
@@ -116,23 +85,13 @@ const AccountScreen = () => {
                     placeholder="Passaword"
                     error={errors.password && errors.password.message}
                 />
-
-              
-
-
                 <Button
                     fontSize={'30px'}
                     color="#B5C401"
                     onPress={handleSubmit(handleSingUp)}>
                     Change
                 </ Button>
-
-
             </Forms>
-
-
-
-
         </Container>
     );
 };

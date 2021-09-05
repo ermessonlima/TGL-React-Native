@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { Container, TextColor, Title, Content, SubTitle, GameButton, Line, GamesContainer, Game } from "./styles";
-import Authentication from '../../components/Authentication/auth'
-import Header from '../../components/Header'
 import api from '../../services/api'
-import { useSelector, useDispatch } from 'react-redux';
-import { Text, View, FlatList } from 'react-native'
+import { useSelector } from 'react-redux';
+import { format, parseISO } from "date-fns";
+import Header from '../../components/Header';
+import React, { useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
+import { Text, View, FlatList, ActivityIndicator } from 'react-native'
+import { Container, TextColor, Title, Content, SubTitle, GameButton, Line, GamesContainer, Game } from "./styles";
 
-var esportes = [];
 export default function Home() {
 
+    const [bets, setBets] = useState<any>([])
+    const [bets2, setBets2] = useState<any>([])
+    const [loading, setLoading] = useState(false)
     const [betType, setBetType] = useState<any>([])
-    const [bets, setBets] = useState([])
-    const [betsFilter, setbetsFilter] = useState([])
-    const [page, setPage] = useState(null)
-    const [pageCurrent, setPageCurrent] = useState(1)
-    const [pageTotal, setPageTotal] = useState(null)
-    const [offSet, setOffset] = useState(0)
-    const [urlParams, setUrlParams] = useState('')
-
-
-
     const data = useSelector((state: any) => state.notes.data)
 
     const config = {
@@ -35,98 +28,50 @@ export default function Home() {
         getData()
     }, [])
 
-
-
     useEffect(() => {
-
-       
         getData()
     }, [])
 
-
     async function getData() {
-        const response = await api.get('/bets?page=2', config)
+        setLoading(true)
+        const response = await api.get(`/bets`, config)
         const { data } = response;
-   
+        setBets2(data.data)
         setBets(data.data)
+        setLoading(false)
     }
 
+    useFocusEffect(
+        React.useCallback(() => {
+            getData()
+        }, [])
+    );
 
     //Função para filtrar
-    function handleBetFilter(index, field) {
-        console.log(field)
-
+    function handleBetFilter(index: any) {
         let aux = betType;
-
-
-        if (aux[index].selected) {
-            aux[index].selected = false;
-        } else {
-            aux[index].selected = true;
-        }
-
+        // @ts-ignore
+        aux[index].selected = !this.selected;
         setBetType([...aux]);
-
-        if (aux[index].selected) {
-            console.log('aqui')
-            getData()
-            if (field.type === aux[index].type && aux[index].selected) {
-
-                var total = esportes.push(`&arry[]=${field.id}`);
-
-                var tics = esportes.join('')
-                console.log(esportes);
-                console.log(tics);
-                setUrlParams(tics)
-
-                return true;
-            }
+        if (filterSelected()) {
+            setBets(
+                bets2.filter((bet: any) => {
+                    for (let i = 0; i < aux.length; i++) {
+                        if (bet.types.type === aux[i].type && aux[i].selected)
+                            return true;
+                    }
+                    return false;
+                })
+            );
         } else {
-            console.log('sdsd')
-            getData()
-
-
-
-            var ab = numeros.indexOf(index);
-            if (ab > -1) {
-                esportes.splice(index, 1);
-            }
-
-
-
-            var estados = esportes
-            var buscar = `&arry[]=${field.id}`;
-            var indice = estados.indexOf(buscar);
-            while (indice >= 0) {
-                estados.splice(indice, 1);
-                indice = estados.indexOf(buscar);
-            }
-            console.log(estados);
-
-
-
-
-
-
-            var tics = esportes.toString().replaceAll(`&arry[]=${field.id}`, '');
-            var resultado = urlParams.toString().replaceAll(`&arry[]=${field.id}`, '');
-            console.log(resultado)
-            console.log(tics)
-            console.log(esportes);
-
-            var tics = esportes.join('')
-            setUrlParams(tics)
-
-
+            setBets(bets2);
         }
 
         return;
     }
-
     //Função para verificar filtro
     function filterSelected() {
         for (let i = 0; i < betType.length; i++) {
-            console.log(betType[i].selected)
             if (betType[i].selected) {
                 return true
             };
@@ -134,41 +79,42 @@ export default function Home() {
         return false;
     }
 
-
-
-    function onPageChange(page) {
-        setOffset((page - 1) * pageTotal)
+    function FooterList({ load }: any) {
+        if (!load) return null;
+        return (
+            <View>
+                <ActivityIndicator size={25} color="#000" />
+            </View>
+        )
     }
-
-
-
-
-    //------------------------------------------------------------------------------
 
     return (
         <>
             <Header view={false} />
             <Container >
-
                 <Title>
                     RECENT GAMES
                 </Title>
                 <SubTitle>
                     Filters
                 </SubTitle>
-
                 <Content>
-                    {betType.map((field, index) => {
-
+                    {betType.map((field: any, index: any) => {
                         return (
                             <GameButton
-                                key={field.type}
-                                onPress={() => handleBetFilter(index, field)}
+                                key={index}
+                                onPress={() => handleBetFilter.call(field, [index])}
                                 backgroundColor={field.selected ? field.color : "#FFFFFF"}
-                                fontColor={!field.selected ? field.color : "#FFFFFF"}
                                 borderColor={field.color}
                             >
-                                <Text>
+                                {field.selected &&
+                                    <Text style={{ color: 'white', fontWeight: 'bold', position: 'absolute', top: 0, right: 10 }}>
+                                        x
+                                    </Text>}
+                                <Text style={{
+                                    color: !field.selected ? field.color : "#fff",
+                                    fontWeight: 'bold', fontStyle: 'italic'
+                                }}>
                                     {field.type}
                                 </Text>
                             </GameButton>
@@ -176,43 +122,26 @@ export default function Home() {
                     })
                     }
                 </Content>
-
-
-
                 <GamesContainer>
-
-                    <FlatList
-              
-                     showsHorizontalScrollIndicator={false}
-                        style={{ width: '100%' }}
+                    {bets.length > 1 && <FlatList
+                        showsVerticalScrollIndicator={false}
+                        style={{ width: '100%', marginBottom: 50 }}
                         data={bets}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.id.toString()}
+                        onEndReachedThreshold={0.1}
+                        ListFooterComponent={<FooterList load={loading} />}
                         renderItem={({ item }) => (
-                            <Game color={item.types.color}>
+                            <Game >
                                 <Line color={item.types.color} />
                                 <View>
                                     <Text>{item.numbers}</Text>
-
-                                    <Text>{new Date(item.created_at).toLocaleDateString('pt-br')} -
+                                    <Text>{format(parseISO(item.created_at), 'dd/MM/yy')} -
                                         ({`R$ ${item.price.toFixed(2).replace(".", ",")}`})</Text>
-
                                     <TextColor color={item.types.color}>{item.types.type}</TextColor>
                                 </View>
-
                             </Game>
-
-
-
-
-                        )} />
-
+                        )} />}
                 </GamesContainer>
-
-
-
-
-
-
             </Container>
         </>
     )

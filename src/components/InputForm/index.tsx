@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { TextInputProps, TouchableOpacity } from 'react-native'
+import React from 'react'
 import Input from '../Input'
 import { Container, Error } from './styles'
+import { TextInputProps } from 'react-native'
 import { Control, Controller } from 'react-hook-form'
 
 interface Props extends TextInputProps {
@@ -35,5 +35,4 @@ export default function InputForm({
             </Error>}
         </Container>
     )
-
 };

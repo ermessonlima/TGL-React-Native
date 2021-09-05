@@ -1,100 +1,105 @@
-import {
-    Container,
-    Forms,
-    RecoverButton,
-    SubmitButton,
-    HandleButton,
-    ContentRight,
-    Title
-} from "./styles";
-import React, { useState, useCallback } from 'react'
-import { Text, View, ToastAndroid } from 'react-native'
-import Input from "../Input";
-import Button from "../Button";
-import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
-import InputForm from "../InputForm";
-import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useSelector, useDispatch } from 'react-redux';
+import Button from "../Button";
+import ModalAlert from '../Modal';
 import api from '../../services/api'
-
+import InputForm from "../InputForm";
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { AntDesign } from '@expo/vector-icons';
+import { Text, View, Modal, Alert } from 'react-native'
+import * as Progress from 'react-native-progress';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useNavigation } from "@react-navigation/native";
+import { Container, Forms, ContentRight, Title, Loading } from "./styles";
 
 interface FormData {
     email: string;
-    password:string;
-    
+    password: string;
+
 }
 const schema = Yup.object().shape({
     email: Yup
-    .string()
-    .required('Email Obrigatorio')
-    .email('Email invalido'),
+        .string()
+        .required('Email required')
+        .email('Invalid email'),
     password: Yup
-    .string()
-    .required('Senha Obrigatorio')
-    .min(6, 'Senha menor q 6'),
-    
+        .string()
+        .required('Password required')
+        .min(6, 'Minimum 6 characters'),
 });
 
-
 const Authentication = () => {
+    const [loading, setLoading] = useState<any>(false);
+    const [modalError, setModalError] = useState(false)
     const dispatch = useDispatch();
     const {
+        reset,
         control,
         handleSubmit,
-        formState: {errors}
+        formState: { errors }
     } = useForm({
-        resolver:yupResolver(schema)
+        resolver: yupResolver(schema)
     });
 
     const navigation = useNavigation();
-
     const handleSingUp = () => {
         navigation.navigate('SignUp')
     }
 
     const handleSignIn = async (form: FormData) => {
-        console.log('redfdre')
-  
-        await api.post('/sessions', {
-            email: form.email,
-            password: form.password
-        }).then( res => {
-            console.log(res.data.user.username)
-            console.log(res.data)
-            dispatch({
-                type: 'ADD_NOTE',
-                payload: {
-                data: {  
-                  name: res.data.user.username,
-                  email: form.email,
-                  password: form.password,
-                  token: res.data.token.token}
-                }
-              })
-              navigation.navigate('HomeTab')
+   
+        setLoading(true)
+   
 
-        })
-        console.log('redfdre')
-
-    
+        try{
+            await api.post('/sessions', {
+                email: form.email,
+                password: form.password
+            }).then(res => {
+                console.log(res.data.user.username)
+                console.log(res.data)
+                dispatch({
+                    type: 'ADD_NOTE',
+                    payload: {
+                        data: {
+                            name: res.data.user.username,
+                            email: form.email,
+                            password: form.password,
+                            token: res.data.token.token
+                        }
+                    }
+                })
+                
+                setTimeout(function () {
+                    navigation.navigate('HomeTab')
+                    setLoading(false)
+                    reset()
+                        ;
+                }, 2000);
+            })
+        }catch {
+            setModalError(true)
+                setLoading(false)
+             
+        }
     }
-
     const handleRecover = () => {
-        dispatch({
-            type: 'ADD_NOTE',
-          })
-       console.log('dd')
+        navigation.navigate('Recover')
     }
 
     return (
         <Container >
+
+            <ModalAlert errorName={'Invalid user'} visible={modalError} set={setModalError}/>
+
+            {loading && 
+            <Modal visible={loading} transparent>
+                <Loading>
+                    <Progress.CircleSnail size={150} color={['#B5C401']} />
+                </Loading>
+            </Modal>}
             <Title>Authentication</Title>
-
-
-
             <Forms >
                 <InputForm
                     name="email"
@@ -103,7 +108,6 @@ const Authentication = () => {
                     autoCorrect={false}
                     keyboardType="email-address"
                     placeholder="Email"
-            
                     error={errors.email && errors.email.message}
                 />
                 <InputForm
@@ -112,10 +116,8 @@ const Authentication = () => {
                     icon="passaword"
                     secureTextEntry
                     placeholder="Passaword"
-                
                     error={errors.password && errors.password.message}
                 />
-
                 <ContentRight>
                     <Button
                         onPress={handleRecover}
@@ -135,8 +137,6 @@ const Authentication = () => {
                         color="#B5C401" />
                 </ Button>
             </Forms>
-
-
             <Button
                 fontSize={'30px'}
                 style={{ marginTop: 50 }}
@@ -146,13 +146,9 @@ const Authentication = () => {
                     name="arrowright"
                     size={30}
                     color="#707070" />
-            </ Button>
-
+            </Button>
             <View style={{ bottom: 0, backgroundColor: '#fff000', right: 0, position: 'absolute' }}>
-
-
             </View>
-
         </Container>
     );
 };

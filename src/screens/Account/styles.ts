@@ -14,13 +14,11 @@ export const Title = styled.Text`
     color: ${({ theme }) => theme.colors.text_primary};
 `;
 
-
 export const SubTitle = styled.Text`
     font-size:17px;
     font-style: italic;
     color: ${({ theme }) => theme.colors.text_primary};
 `;
-
 
 export const Line = styled.View`
     height: 8px;

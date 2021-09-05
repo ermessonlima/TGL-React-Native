@@ -1,16 +1,16 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Bets from '../screens/Bets';
+import Home from '../screens/Home';
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
-import Recover from '../screens/Recover';
-import Home from '../screens/Home';
-import { NavigationContainer } from '@react-navigation/native';
-import Bets from '../screens/Bets';
 import Account from '../screens/Account';
-import  TabMoney  from '../components/IconsTabBar/TabMoney';
+import Recover from '../screens/Recover';
 import  TabHome  from '../components/IconsTabBar/TabHome';
+import  TabMoney  from '../components/IconsTabBar/TabMoney';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import  TabAccount  from '../components/IconsTabBar/TabAccount';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Auth = createStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -18,11 +18,8 @@ const Tabs = createBottomTabNavigator();
 function HomeTab() {
     return (
         <Tabs.Navigator
-        
             tabBarOptions={{
-                
                 style: {
-                    
                     borderTopLeftRadius: 15,
                     borderTopRightRadius: 15,
                     height: 70,
@@ -30,9 +27,7 @@ function HomeTab() {
                     elevation:10
                 },
                 activeTintColor: '#707070',
-              
                 tabStyle: {
-                    
                     paddingTop: 5,
                     paddingBottom: 5,
                     zIndex:10,
@@ -41,8 +36,6 @@ function HomeTab() {
             }}
         >
             <Tabs.Screen 
-            
-
                 name="Home"
                 component={Home}
                 options={{

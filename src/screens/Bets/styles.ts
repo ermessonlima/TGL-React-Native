@@ -64,16 +64,13 @@ export const GameOption = styled.TouchableOpacity<any>`
     border-color: ${(props) => props.borderColor};
 `;
 
-
 export const Balls = styled.View`
    flex-direction: row;
     flex-wrap: wrap;
     max-width: 100%;
     margin-top: 5px;
-
     margin-bottom: 20px;
 `;
-
 
 export const BallsList = styled.TouchableOpacity<any>`
     display: flex;
@@ -135,4 +132,11 @@ export const AddToCart = styled.TouchableOpacity<any>`
     color: #fff;
     border-radius: 10px;
     background-color: ${(props) => props.background};
+`;
+
+export const Loading = styled.View`
+justify-content: center;
+flex:1;
+align-items: center;
+background-color: 'rgba(255,255,255,0.8)';
 `;

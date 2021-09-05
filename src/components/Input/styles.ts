@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components/native";
+import styled from "styled-components/native";
 
 export const Container = styled.View<any>`
     height: 70px;
@@ -9,17 +9,13 @@ export const Container = styled.View<any>`
     align-items: center;
     border-color: ${({ theme }) => theme.colors.border};
     height: 65px;
- 
 `;
-
 
 export const TextInput = styled.TextInput`
     flex:1;
     font-size: 16px;
     font-weight: bold;
     font-style: normal;
-  
-   
-    color: ${({ theme }) => theme.colors.border};
+    color: #707070;
 `;
 

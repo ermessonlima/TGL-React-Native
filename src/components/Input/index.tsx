@@ -10,12 +10,10 @@ interface InputProps extends TextInputProps {
 }
 
 export default function Input({ name, icon, secureTextEntry, ...rest }: any) {
-
     const mudarText = () => {
         setSecureText(!secureText)
     }
     const [secureText, setSecureText] = useState(true)
-
     return (
         <Container errors>
             <TextInput

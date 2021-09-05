@@ -15,7 +15,7 @@ export const Title = styled.Text`
 `;
 
 export const Forms = styled.View`
-
+  
     elevation: 1;
     height: 293px;
     width:306px ;
@@ -48,4 +48,12 @@ export const SubmitButton = styled.Button`
 
 export const HandleButton = styled.Button`
 
+`;
+
+
+export const Loading = styled.View`
+justify-content: center;
+flex:1;
+align-items: center;
+background-color: 'rgba(255,255,255,0.8)';
 `;
