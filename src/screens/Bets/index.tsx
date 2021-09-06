@@ -1,5 +1,5 @@
 import { Text } from 'react-native';
-import { Modal } from 'react-native';
+import { Modal, StyleSheet } from 'react-native';
 import ModalAlert from '../../components/Modal';
 import api from '../../services/api';
 import Cart from '../../components/Cart';
@@ -11,6 +11,7 @@ import {
     Container, SubTitle, Title, GameOptions, BallsList, AddToCart,
     TextButton, GameOption, Balls, Ball, BetButtons, BetButton, Loading
 } from "./styles";
+import ParsedText from 'react-native-parsed-text';
 
 export interface Game {
     type: string;
@@ -179,12 +180,25 @@ export default function Bets() {
                 })}</GameOptions>
                 {numbers.length == 0 &&
                     <>
-                    <Text style={{margin:5}}>
+                    <SubTitle style={{ fontWeight:'bold'}}>
                         Fill your bet
-                    </Text>
-                    <Text>
-                            {info.description}
-                    </Text>
+                    </SubTitle>
+                    <ParsedText
+          style={styles.text}
+          parse={
+            [
+                {pattern: /números/g,                     style: styles.magicNumber},
+                {pattern: /ganhar/g,                     style: styles.magicNumber},
+              {pattern: /\d/g,                     style: styles.magicNumber},
+           
+            ]
+          }
+          childrenProps={{allowFontScaling: false}}
+        >
+         
+          {info.description}
+        </ParsedText>
+                  
                     </>}
                 <Balls>{numbers.map((field, index) => {
                     console.log(index)
@@ -267,3 +281,26 @@ export default function Bets() {
     )
 }
 
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+    },
+  
+    text: {
+      color: '#868686',
+      fontSize: 14,
+    },
+
+  
+    magicNumber: {
+      fontSize: 14,
+      color: '#868686',
+      fontWeight:'bold'
+    },
+  
+
+  
+  });
